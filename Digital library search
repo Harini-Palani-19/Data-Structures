@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node 
+{
+    int val;
+    struct Node* left;
+    struct Node* right;
+};
+
+struct Node* createNode(int val)
+{
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->val = val;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+struct Node* insert(struct Node* root, int val)
+{
+    if (root == NULL)
+        return createNode(val);
+
+    if (val < root->val)
+        root->left = insert(root->left, val);
+    else
+        root->right = insert(root->right, val);
+
+    return root;
+}
+
+struct Node* search(struct Node* root, int key)
+{
+    if (root == NULL || root->val == key)
+        return root;
+
+    if (key < root->val)
+        return search(root->left, key);
+    else
+        return search(root->right, key);
+}
+
+void inorder(struct Node* root)
+{
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->val);
+        inorder(root->right);
+    }
+}
+
+int main()
+{
+    int n, key, val;
+    struct Node* root = NULL;
+
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &val);
+        root = insert(root, val);
+    }
+
+    scanf("%d", &key);
+
+    struct Node* result = search(root, key);
+
+    if (result != NULL) {
+        printf("Book found! Subtree rooted at %d:\n", key);
+        inorder(result);
+    } else {
+        printf("Book not found");
+    }
+
+    return 0;
+}
